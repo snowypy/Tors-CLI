@@ -69,6 +69,7 @@ fn main() {
         .subcommand(Command::new("delcategory").about("Deletes a category"))
         .subcommand(Command::new("assigncategory").about("Assigns a category to a task"))
         .subcommand(Command::new("listtasks").about("Lists all tasks with their categories"))
+        .subcommand(Command::new("categories").about("Lists all categories"))
         .subcommand(Command::new("changetheme").about("Changes the theme"))
         .get_matches();
 
@@ -81,6 +82,7 @@ fn main() {
         Some(("delcategory", _)) => delete_category(&mut config),
         Some(("assigncategory", _)) => assign_category(&mut config),
         Some(("listtasks", _)) => list_tasks(&config),
+        Some(("categories", _)) => list_category(&config),
         Some(("changetheme", _)) => change_theme(&mut config),
         _ => println!("{}", "Invalid command. Use --help for usage.".red()),
     }
@@ -130,6 +132,25 @@ fn create_category(config: &mut Config) {
     config.categories.push(Category { id, name });
 
     println!("{}", "Category created successfully!".green());
+}
+
+fn list_category(config: &Config) {
+    if config.categories.is_empty() {
+        println!("{}", "No categories found.".yellow());
+        return;
+    }
+
+    let theme_color = apply_theme(&config.theme);
+
+    for category in &config.categories {
+        println!(
+            "{} {}{}{}",
+            theme_color(&category.name),
+            "[ID".bright_black(),
+            category.id.to_string().bright_black(),
+            "]".bright_black()
+        );
+    }
 }
 
 fn edit_task(config: &mut Config) {
