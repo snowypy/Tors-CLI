@@ -73,15 +73,15 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        Some(("CreateTask", _)) => create_task(&mut config),
-        Some(("CreateCategory", _)) => create_category(&mut config),
-        Some(("EditTask", _)) => edit_task(&mut config),
-        Some(("EditCategory", _)) => edit_category(&mut config),
-        Some(("DelTask", _)) => delete_task(&mut config),
-        Some(("DelCategory", _)) => delete_category(&mut config),
-        Some(("AssignCategory", _)) => assign_category(&mut config),
-        Some(("ListTask", _)) => list_tasks(&config),
-        Some(("ChangeTheme", _)) => change_theme(&mut config),
+        Some(("createtask", _)) => create_task(&mut config),
+        Some(("createcategory", _)) => create_category(&mut config),
+        Some(("edittask", _)) => edit_task(&mut config),
+        Some(("editcategory", _)) => edit_category(&mut config),
+        Some(("deltask", _)) => delete_task(&mut config),
+        Some(("delcategory", _)) => delete_category(&mut config),
+        Some(("assigncategory", _)) => assign_category(&mut config),
+        Some(("listtasks", _)) => list_tasks(&config),
+        Some(("changetheme", _)) => change_theme(&mut config),
         _ => println!("{}", "Invalid command. Use --help for usage.".red()),
     }
 
@@ -215,7 +215,6 @@ fn list_tasks(config: &Config) {
         return;
     }
 
-    // Group tasks by category
     let mut category_map: std::collections::HashMap<String, Vec<&Task>> = std::collections::HashMap::new();
     for task in &config.tasks {
         let category_name = task.category.clone().unwrap_or_else(|| "Uncategorized".to_string());
@@ -228,7 +227,7 @@ fn list_tasks(config: &Config) {
     let theme_color = apply_theme(&config.theme);
 
     for (category, tasks) in category_map.iter() {
-        println!("{}", theme_color(category)); // Print category name
+        println!("{}", theme_color(category));
 
         for task in tasks {
             println!(
@@ -238,8 +237,8 @@ fn list_tasks(config: &Config) {
                 task.id.to_string().bright_black(),
                 "]".bright_black()
             );
-            println!("        - {}", task.description.white()); // Task description
-            println!("        - {}", theme_color(&task.eta));   // Task ETA
+            println!("        - {}", task.description.white());
+            println!("        - {}", theme_color(&task.eta));
         }
     }
 }
